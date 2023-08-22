@@ -1,97 +1,41 @@
-name: Pull Request
-
-on:
-  workflow_dispatch:
+name: custom viz
+on:  
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+#  workflow-dispatch:
+#   inputs: 
 
 jobs:
-  checkout-and-build-pr:
-    name: checkout-and-build-pr
+  build-and-publish:
+    name: Build and Publish Nerdpack
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
+      - name: "Setup - Checkout"
+        uses: actions/checkout@v2.1.0
 
-      - name: Setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 14
+      - name: "Setup - Terraform CLI"
+        uses: hashicorp/setup-terraform@v1
 
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v1
-        env:
-          cache-name: node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-
-
-      - name: Install Dependencies
-        run: npm ci
-
+         
+       
       - name: Install NR1 CLI
-        run: curl -s https://cli.nr-ext.net/installer.sh | sudo bash
-
-      - name: Save credentials 
-        run: nr1 profiles:add --name {3933528} --api-key {NRAK-G9JMX1EYJEC7JLFP77V0XFJJ1RA} --region "us"
-
-      - name: Create your package
-        run: nr1 create --type nerdpack --name my-awesome-nerdpack
-
-      - name: Start developing
-        run: cd my-awesome-nerdpack && nr1 nerdpack:serve
-        
-
-      - name: NR1 Nerdpack Build
         run: |
-          nr1 nerdpack:build
+          curl -s https://cli.nr-ext.net/installer.sh | sudo bash
 
-  # test:
-  #   name: test
-  #   needs: checkout-and-build-pr
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v2
 
-  #     - name: Setup node
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 14
+      - name: Configure NR1 CLI API key
 
-  #     - name: Cache node_modules
-  #       id: cache-node-modules
-  #       uses: actions/cache@v1
-  #       env:
-  #         cache-name: node-modules
-  #       with:
-  #         path: ~/.npm
-  #         key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-${{ env.cache-name }}-
+        run: nr1 profiles:add --name account-slug --api-key ${{secrets.NEW_RELIC_API_KEY}} --region us 
+      
 
-  #     - name: Install Dependencies
-  #       run: npm ci
+      - name: Publish Nerdpack
+        run: nr1 nerdpack:publish
+      
 
-  #     - name: Run npm test
-  #       run: npm test
-
-  # validate-nerdpack:
-  #   name: validate nerdpack
-  #   needs: checkout-and-build-pr
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v2
-
-  #     - name: Validate Open Source Files
-  #       uses: newrelic/validate-nerdpack-action@v1
-
-  #     - name: Install NR1 CLI
-  #       run: |
-  #         curl -s https://cli.nr-ext.net/installer.sh | sudo bash
-
-  #     - name: Validate Nerdpack Schema
-  #       run: |
-  #         nr1 nerdpack:validate
+      - name: Subscribe Nerdpack
+        run: nr1 nerdpack:subscribe
+       
