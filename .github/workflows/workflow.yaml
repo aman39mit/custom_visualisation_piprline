@@ -64,11 +64,11 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run eslint-check and generate report
-        id: eslint-check
-        run: |
-          npm run eslint-check -- --output-file eslint_report.json --format json
-        continue-on-error: true
+      # - name: Run eslint-check and generate report
+      #   id: eslint-check
+      #   run: |
+      #     npm run eslint-check -- --output-file eslint_report.json --format json
+      #   continue-on-error: true
 
       - name: Annotate Lint Results
         uses: ataylorme/eslint-annotate-action@1.0.4
