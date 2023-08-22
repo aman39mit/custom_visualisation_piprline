@@ -33,7 +33,7 @@ jobs:
       - name: Get Package Version
         id: get-version
         run: PACKAGE_VERSION=$(cat package.json | jq -r .version)
-        run: echo "NER Package Version = $PACKAGE_VERSION"
+        # run: echo "NER Package Version = $PACKAGE_VERSION"
 
 
       - name: Publish Nerdpack
