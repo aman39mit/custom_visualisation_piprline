@@ -34,7 +34,7 @@ jobs:
         run: curl -s https://cli.nr-ext.net/installer.sh | sudo bash
 
       - name: Save credentials 
-        run: nr1 profiles:add --name {3933528} --api-key {NRAK-G9JMX1EYJEC7JLFP77V0XFJJ1RA} --region {"us"}
+        run: nr1 profiles:add --name {"3933528"} --api-key {"NRAK-G9JMX1EYJEC7JLFP77V0XFJJ1RA"} --region {"US"}
 
       - name: Create your package
         run: nr1 create --type nerdpack --name my-awesome-nerdpack
