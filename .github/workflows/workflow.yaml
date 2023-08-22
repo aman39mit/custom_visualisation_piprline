@@ -36,8 +36,8 @@ jobs:
       - name: Save credentials 
         run: nr1 profiles:add --name {3933528} --api-key {NRAK-G9JMX1EYJEC7JLFP77V0XFJJ1RA} --region "us"
 
-      - name: Create your package
-        run: nr1 create --type nerdpack --name my-awesome-nerdpack
+      # - name: Create your package
+      #   run: nr1 create --type nerdpack --name my-awesome-nerdpack
 
       - name: Start developing
         run: cd my-awesome-nerdpack && nr1 nerdpack:serve
