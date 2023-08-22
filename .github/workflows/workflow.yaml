@@ -18,7 +18,17 @@ jobs:
       - name: "Setup - Terraform CLI"
         uses: hashicorp/setup-terraform@v1
 
-         
+        - name: Get Package Version
+        id: get-version
+        run: PACKAGE_VERSION=$(cat package.json | jq -r .version)
+
+      - name: Update Nerdpack Version
+        run: |
+          # Increment the version number (example: from 1.0.0 to 1.0.1)
+          NEW_VERSION=$(echo "$PACKAGE_VERSION" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+          echo "Updating Nerdpack version to $NEW_VERSION"
+          jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json
+          mv tmp.json package.json 
        
       - name: Install NR1 CLI
         run: |
@@ -30,17 +40,17 @@ jobs:
       - name: Configure NR1 CLI API key
         run: nr1 profiles:add --name account-slug --api-key ${{secrets.NEW_RELIC_API_KEY}} --region us 
 
-      - name: Get Package Version
-        id: get-version
-        run: PACKAGE_VERSION=$(cat package.json | jq -r .version)
+      # - name: Get Package Version
+      #   id: get-version
+      #   run: PACKAGE_VERSION=$(cat package.json | jq -r .version)
 
-      - name: Update Nerdpack Version
-        run: |
-          # Increment the version number (example: from 1.0.0 to 1.0.1)
-          NEW_VERSION=$(echo "$PACKAGE_VERSION" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
-          echo "Updating Nerdpack version to $NEW_VERSION"
-          jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json
-          mv tmp.json package.json
+      # - name: Update Nerdpack Version
+      #   run: |
+      #     # Increment the version number (example: from 1.0.0 to 1.0.1)
+      #     NEW_VERSION=$(echo "$PACKAGE_VERSION" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+      #     echo "Updating Nerdpack version to $NEW_VERSION"
+      #     jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json
+      #     mv tmp.json package.json
       
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
