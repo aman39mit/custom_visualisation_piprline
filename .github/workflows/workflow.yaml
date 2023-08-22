@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-#  workflow-dispatch:
-#   inputs: 
 
 jobs:
   build-and-publish:
@@ -26,11 +24,17 @@ jobs:
         run: |
           curl -s https://cli.nr-ext.net/installer.sh | sudo bash
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Configure NR1 CLI API key
-
         run: nr1 profiles:add --name account-slug --api-key ${{secrets.NEW_RELIC_API_KEY}} --region us 
-      
+
+      - name: Get Package Version
+        id: get-version
+        run: PACKAGE_VERSION=$(cat package.json | jq -r .version)
+        run: echo "NER Package Version = $PACKAGE_VERSION"
+
 
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
@@ -38,4 +42,4 @@ jobs:
 
       - name: Subscribe Nerdpack
         run: nr1 nerdpack:subscribe
-       
+
