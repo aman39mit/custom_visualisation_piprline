@@ -59,7 +59,11 @@ jobs:
           if [ ${{ steps.publish.exit_code }} -eq 0 ]; then
             echo "Nerdpack published successfully"
           else
-            echo "Nerdpack publish failed"
+            CURRENT_VERSION=$(jq -r .version package.json)
+            echo "current version : $CURRENT_VERSION"
+            NEW_VERSION=$(echo $CURRENT_VERSION )
+            echo "new version : $NEW_VERSION"
+            jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
           fi
       
       - name: Subscribe Nerdpack
