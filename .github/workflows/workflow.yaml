@@ -56,7 +56,7 @@ jobs:
         continue-on-error: true
       - name: Check if publish was successful
         run: |
-          echo ${{ steps.publish }}
+          echo ${{ steps.publish.output }}
           # if [ ${{ steps.publish.exit_code }} -eq 0 ]; then
           #   echo "Nerdpack published successfully"
           # else
