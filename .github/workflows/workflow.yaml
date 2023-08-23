@@ -52,6 +52,14 @@ jobs:
       
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
+        id: publish
+      - name: Check if publish was successful
+        run: |
+          if [ ${{ steps.publish.exit_code }} -eq 0 ]; then
+            echo "Nerdpack published successfully"
+          else
+            echo "Nerdpack publish failed"
+          fi
       
       - name: Subscribe Nerdpack
         run: nr1 nerdpack:subscribe
