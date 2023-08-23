@@ -2,6 +2,9 @@ name: custom viz
 on:  
   workflow_dispatch:
 
+env:
+  CURR_VER = $(jq -r .version package.json)
+
 jobs:
   build-and-publish:
     name: Build and Publish Nerdpack
@@ -60,12 +63,16 @@ jobs:
           if [ ${{ steps.publish.outcome }} -eq "success" ]; then
             echo "Nerdpack published successfully"
           else
-            CURRENT_VERSION=$(jq -r .version package.json)
-            echo "current version: $CURRENT_VERSION"
-            NEW_VERSION=$(echo $CURRENT_VERSION )
+            echo "Nerdpack publish unsuccessful"
+            echo "current version : $CURR_VER"
+            NEW_VERSION=CURR_VER    
             echo "new version : $NEW_VERSION"
             jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
-            echo "Nerdpack published successfully"
+            git config --global user.email "aman39mit@gmail.com"
+            git config --global user.name "aman39mit"
+            git add package.json
+            git commit -m "Bump version to $NEW_VERSION"
+            git push origin main
           fi
       
       - name: Subscribe Nerdpack
