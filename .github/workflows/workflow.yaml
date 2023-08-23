@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 env: 
-  CURR_VER: $(jq -r .version package.json)
+  CURR_VER: zero
 
 jobs:
   build-and-publish:
@@ -35,6 +35,7 @@ jobs:
       - name: Update Nerdpack Version
         run: |
           CURRENT_VERSION=$(jq -r .version package.json)
+          CURR_VER=CURRENT_VERSION
           echo "current version : $CURRENT_VERSION"
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo "new version : $NEW_VERSION"
