@@ -39,6 +39,7 @@ jobs:
           CURRENT_VERSION=$(jq -r .version package.json)
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
+          
 
         # PACKAGE_VERSION=$(cat package.json | jq -r .version)
         # echo $PACKAGE_VERSION
@@ -51,6 +52,7 @@ jobs:
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
       
-
       - name: Subscribe Nerdpack
         run: nr1 nerdpack:subscribe
+
+# hello
