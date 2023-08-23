@@ -1,11 +1,6 @@
 name: custom viz
 on:  
-  pull_request:
-    branches:
-      - main
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
@@ -15,8 +10,8 @@ jobs:
       - name: "Setup - Checkout"
         uses: actions/checkout@v2.1.0
 
-      - name: "Setup - Terraform CLI"
-        uses: hashicorp/setup-terraform@v1
+      # - name: "Setup - Terraform CLI"
+      #   uses: hashicorp/setup-terraform@v1
        
       - name: Install NR1 CLI
         run: |
@@ -41,7 +36,11 @@ jobs:
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo $NEW_VERSION
           jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
-          
+          git config --global user.email "aman39mit@gmail.com"
+          git config --global user.name "aman39mit"
+          git add package.json
+          git commit -m "Bump version to $NEW_VERSION"
+          git push origin main
 
         # PACKAGE_VERSION=$(cat package.json | jq -r .version)
         # echo $PACKAGE_VERSION
