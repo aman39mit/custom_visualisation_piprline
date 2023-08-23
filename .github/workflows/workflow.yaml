@@ -60,6 +60,7 @@ jobs:
           if [ ${{ steps.publish.outcome }} -eq "success" ]; then
             echo "Nerdpack published successfully"
           else
+            CURRENT_VERSION=$(jq -r .version package.json)
             echo "current version: $CURRENT_VERSION"
             NEW_VERSION=$(echo $CURRENT_VERSION )
             echo "new version : $NEW_VERSION"
