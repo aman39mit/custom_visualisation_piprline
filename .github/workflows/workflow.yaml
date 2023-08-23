@@ -53,6 +53,7 @@ jobs:
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
         id: publish
+        continue-on-error: false
       - name: Check if publish was successful
         run: |
           if [ ${{ steps.publish.exit_code }} -eq 0 ]; then
