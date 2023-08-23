@@ -2,7 +2,8 @@ name: custom viz
 on:  
   workflow_dispatch:
 
-env: CURR_VER = $(jq -r .version package.json)
+env: 
+  CURR_VER: $(jq -r .version package.json)
 
 jobs:
   build-and-publish:
