@@ -59,6 +59,17 @@ jobs:
             echo "Nerdpack published successfully"
           else
             echo "Nerdpack publish failed"
+            run: |
+              CURRENT_VERSION=$(jq -r .version package.json)
+              echo $CURRENT_VERSION
+              NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF - 1;} 1' | sed 's/ /./g')
+              echo $NEW_VERSION
+              jq --arg new_version "$NEW_VERSION" '.version = $new_version' package.json > tmp.json && mv tmp.json package.json
+              git config --global user.email "aman39mit@gmail.com"
+              git config --global user.name "aman39mit"
+              git add package.json
+              git commit -m "Bump version to $NEW_VERSION"
+              git push origin main
           fi
       
       - name: Subscribe Nerdpack
