@@ -62,7 +62,7 @@ jobs:
       - name: Check if publish was successful
         run: |
     
-          if [ ${{ steps.publish.outcome }} -eq "success" ]; then
+          if [ ${{ steps.publish.outcome }} -eq "success" ] then
             echo "Nerdpack published successfully"
           else
           {
