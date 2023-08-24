@@ -65,11 +65,9 @@ jobs:
           if [ ${{ steps.publish.outcome }} -eq "success" ] then
             echo "Nerdpack published successfully"
           else
-          {
             echo "Nerdpack publish unsuccessful"
             # $NEW_VERSION = ${{ steps.version.outputs.CURRENT_VERSION }}
             # echo $NEW_VERSION
-          }
             # echo "current version : CURR_VER"
             # NEW_VERSION=CURR_VER    
             # echo "new version : $NEW_VERSION"
