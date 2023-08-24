@@ -35,7 +35,7 @@ jobs:
       - name: Update Nerdpack Version
         run: |
           CURRENT_VERSION=$(jq -r .version package.json) >> $GITHUB_OUTPUT
-          echo $GITHUB_OUTPUT
+          echo "$CURRENT_VERSION"
           echo "current version : $CURRENT_VERSION"
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo "new version : $NEW_VERSION"
