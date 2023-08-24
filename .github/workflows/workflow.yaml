@@ -33,9 +33,10 @@ jobs:
       #     echo $PACKAGE_VERSION
 
       - name: Update Nerdpack Version
+        id: version
         run: |
           CURRENT_VERSION=$(jq -r .version package.json) >> $GITHUB_OUTPUT
-          echo "$CURRENT_VERSION"
+          echo "$GITHUB_OUTPUT"
           echo "current version : $CURRENT_VERSION"
           NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
           echo "new version : $NEW_VERSION"
@@ -57,7 +58,7 @@ jobs:
       - name: Publish Nerdpack
         run: nr1 nerdpack:publish
         id: publish
-        continue-on-error: true
+        # continue-on-error: true
       - name: Check if publish was successful
         run: |
     
@@ -65,6 +66,9 @@ jobs:
             echo "Nerdpack published successfully"
           else
             echo "Nerdpack publish unsuccessful"
+            $NEW_VERSION = ${{ steps.version.outputs.CURRENT_VERSION }}
+            echo $NEW_VERSION
+            
             # echo "current version : CURR_VER"
             # NEW_VERSION=CURR_VER    
             # echo "new version : $NEW_VERSION"
